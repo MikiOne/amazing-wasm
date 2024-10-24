@@ -1,6 +1,6 @@
 use js_sys::Promise;
-use std::time::Duration;
 use serde::Serialize;
+use std::time::Duration;
 use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::window;
@@ -14,7 +14,9 @@ pub async fn sleep(duration: Duration) {
                 duration.as_millis() as i32,
             )
             .unwrap();
-    })).await.unwrap();
+    }))
+    .await
+    .unwrap();
 }
 
 macro_rules! log {

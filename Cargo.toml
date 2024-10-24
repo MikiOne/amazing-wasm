@@ -18,11 +18,10 @@ serde = { version = "1.0.213", features = ["derive"] }
 serde_json = "1.0.132"
 
 #aptos
-move-core-types = { git = "https://github.com/move-language/move", rev = "ea70797099baea64f05194a918cebd69ed02b285", features = ["address32"] }
-tw_aptos = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
-tw_proto = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
-tw_encoding = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
-tw_coin_entry = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
+sha3 = "0.10.8"
+ed25519-dalek = "1.0"
+bcs = "0.1.6"
+#move-core-types = { git = "https://github.com/move-language/move", rev = "ea70797099baea64f05194a918cebd69ed02b285", features = ["address32"] }
 
 
 [dependencies.web-sys]
