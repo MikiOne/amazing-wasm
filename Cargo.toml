@@ -23,22 +23,17 @@ tw_aptos = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.
 tw_proto = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
 tw_encoding = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
 tw_coin_entry = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
-quick-protobuf = { version = "0.8.1" }
 
 
 [dependencies.web-sys]
 version = "0.3"
 features = ["console", "Window", "Document", "Location", ]
 
-[dev-dependencies]
-#tw_any_coin = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
-#tw_keypair = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
-#tw_ethereum = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
-#tw_evm = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
-#tw_any_coin = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
-#tw_number = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
-#tw_proto = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
-#tw_coin_entry = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
-#tw_coin_registry = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
-#tw_memory = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
-#tw_misc = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
+
+
+# build release opt
+[profile.release]
+lto = true
+opt-level = 'z'
+strip = true
+codegen-units = 1
