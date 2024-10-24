@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name" : "amazing-wasm",
+    "version" : "1.0",
+    "description" : "amazing-wasm",
+    "permissions": [],
+    "background": {
+        "service_worker": "run_wasm.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*.endless.link/*"],
+            "js": [
+                "amazing_wasm.js", "run_wasm.js"
+            ]
+        }
+    ],
+    "web_accessible_resources": [{
+        "resources": ["amazing_wasm_bg.wasm"],
+        "matches": ["*://*.endless.link/*"]
+    }]
+}

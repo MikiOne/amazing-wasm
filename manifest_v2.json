@@ -1,0 +1,18 @@
+{
+    "name" : "amazing-wasm",
+    "version" : "1.0",
+    "description" : "amazing-wasm",
+    "permissions": [],
+    "content_scripts": [
+        {
+            "matches": ["*://*.example.com/*"],
+            "js": [
+                "amazing_wasm.js", "run_wasm.js"
+            ]
+        }
+    ],
+    "web_accessible_resources": [
+        "amazing_wasm_bg.wasm"
+    ],
+    "manifest_version": 2
+}

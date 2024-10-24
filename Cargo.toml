@@ -1,0 +1,45 @@
+[package]
+name = "amazing-wasm"
+version = "0.1.0"
+authors = ["egal <egal@qq.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+console_error_panic_hook = "0.1.6"
+
+obfstr = "0.4.4"
+serde = { version = "1.0.213", features = ["derive"] }
+serde_json = "1.0.132"
+
+#aptos
+move-core-types = { git = "https://github.com/move-language/move", rev = "ea70797099baea64f05194a918cebd69ed02b285", features = ["address32"] }
+tw_aptos = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
+tw_proto = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
+tw_encoding = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
+tw_coin_entry = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
+secp256k1-sys = "0.10.1"
+
+
+[dependencies.web-sys]
+version = "0.3"
+features = ["console", "Window", "Document", "Location", ]
+
+[dev-dependencies]
+#tw_any_coin = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
+#quick-protobuf = { version = "0.8.1" }
+#tw_keypair = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
+#tw_ethereum = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
+#tw_evm = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
+#tw_any_coin = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
+#tw_number = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
+#tw_proto = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
+#tw_coin_entry = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
+#tw_coin_registry = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
+#tw_memory = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
+#tw_misc = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.0.27" }
