@@ -32,10 +32,8 @@ pub async fn main() {
     // 获取referer
     let referer = document.referrer();
     web_sys::console::log_1(&format!("Referer: {}", referer).into());
-}
 
-#[wasm_bindgen]
-pub fn sign_txn() -> Result<String, JsValue> {
+
     let input = setup_proto_transaction(
         "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
         "5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec",
@@ -52,6 +50,27 @@ pub fn sign_txn() -> Result<String, JsValue> {
         })),
     );
     let output = Signer::sign_proto(input);
-    Ok(format!("{:?}", output))
-    // util::output_to_json(output)
+    web_sys::console::log_1(&format!("aptos sign txn: {:?}", output).into());
 }
+
+// #[wasm_bindgen]
+// pub fn sign_txn() -> Result<String, JsValue> {
+//     let input = setup_proto_transaction(
+//         "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+//         "5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec",
+//         "transfer",
+//         99,
+//         33,
+//         3296766,
+//         3664390082,
+//         100,
+//         "",
+//         Some(OpsDetails::Transfer(Transfer {
+//             to: "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30".to_string(),
+//             amount: 1000,
+//         })),
+//     );
+//     let output = Signer::sign_proto(input);
+//     Ok(format!("{:?}", output))
+//     // util::output_to_json(output)
+// }
