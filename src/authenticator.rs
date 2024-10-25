@@ -12,7 +12,6 @@ use aptos_crypto::hash::CryptoHash;
 use aptos_crypto::multi_ed25519::{MultiEd25519PublicKey, MultiEd25519Signature};
 use aptos_crypto_derive::{CryptoHasher, DeserializeKey, SerializeKey};
 use move_core_types::account_address::AccountAddress;
-use rand::{OsRng, Rng};
 use serde::{Deserialize, Serialize};
 use aptos_crypto::ValidCryptoMaterialStringExt;
 

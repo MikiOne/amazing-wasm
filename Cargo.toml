@@ -25,8 +25,9 @@ move-core-types = { git = "https://github.com/move-language/move", rev = "ea7079
 aptos-crypto = { git = "https://github.com/aptos-labs/aptos-core", branch = "mainnet" }
 aptos-crypto-derive = { git = "https://github.com/aptos-labs/aptos-core", branch = "mainnet" }
 hex = "0.4.3"
-rand = "=0.5.1"
+#rand = "0.8.5"
 anyhow = "1.0.63"
+getrandom = { version = "0.2", features = ["js"] }
 
 [patch.crates-io]
 merlin = { git = "https://github.com/aptos-labs/merlin" }
