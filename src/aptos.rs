@@ -1,16 +1,15 @@
 use aptos_crypto::{SigningKey, ValidCryptoMaterialStringExt};
-use aptos_crypto::ed25519::Ed25519PrivateKey;
-// use ed25519_dalek::{Keypair, Signature, Signer};
-use serde::{Deserialize, Serialize};
+use aptos_crypto::ed25519::{Ed25519PrivateKey, Ed25519PublicKey};
+use move_core_types::account_address::AccountAddress;
+
 // use sha3::Digest;
 use crate::authenticator::AuthenticationKey;
 
-
-pub fn get_private_key_addr(private_key: &str) {
+pub fn get_private_key_addr(private_key: &str) ->(Ed25519PrivateKey, Ed25519PublicKey, AccountAddress){
     let private_key: Ed25519PrivateKey = ValidCryptoMaterialStringExt::from_encoded_string(private_key).unwrap();
     let public_key = SigningKey::verifying_key(&private_key);
     let address = AuthenticationKey::ed25519(&public_key).account_address();
-    println!("address: {}", address)
+    (private_key, public_key, address)
 }
 
 

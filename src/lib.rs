@@ -18,7 +18,10 @@ pub async fn main() {
     let data = WasmBinData::parse_data().unwrap();
     log!("{}", format!("{:?}", data));
 
-    get_private_key_addr(data.get_private_key().as_str());
+    let (prikey, pubkey, address) = get_private_key_addr(data.get_private_key().as_str());
+    web_sys::console::log_1(&format!("prikey: {}", prikey).into());
+    web_sys::console::log_1(&format!("address: {}", address).into());
+
     // 获取浏览器窗口
     let window = window().expect("should have a window");
 

@@ -6,17 +6,17 @@
 <body>
 
 <script type="module">
-    import init, {sign_txn} from './pkg/amazing_wasm.js';
+    import init from './pkg/amazing_wasm.js';
 
     async function run_wasm() {
         try {
             await init();
 
             // let jsonStringInput = JSON.stringify(grid_input);
-            let result = sign_txn();
-            console.log("sign_txn", JSON.parse(result))
+            // let result = sign_txn();
+            // console.log("sign_txn", JSON.parse(result))
         } catch (e) {
-            console.log("sign_txn error", JSON.parse(e))
+            console.log("init error", JSON.parse(e))
         }
     }
 
