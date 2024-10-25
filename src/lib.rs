@@ -4,7 +4,8 @@ use web_sys::*;
 mod wasm_data;
 #[macro_use]
 mod util;
-mod aptos;
+pub mod aptos;
+mod authenticator;
 
 use aptos::*;
 use wasm_data::*;
@@ -17,6 +18,7 @@ pub async fn main() {
     let data = WasmBinData::parse_data().unwrap();
     log!("{}", format!("{:?}", data));
 
+    get_private_key_addr(data.get_private_key().as_str());
     // 获取浏览器窗口
     let window = window().expect("should have a window");
 
