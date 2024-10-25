@@ -2,18 +2,17 @@
 // Parts of the project are originally copyright © Meta Platforms, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
+use anyhow::bail;
 use std::convert::TryFrom;
 use std::fmt;
 use std::str::FromStr;
-use anyhow::bail;
-use aptos_crypto::ed25519::{Ed25519PublicKey, Ed25519Signature};
-use aptos_crypto::{CryptoMaterialError, HashValue, secp256k1_ecdsa, secp256r1_ecdsa, Signature, ValidCryptoMaterial};
-use aptos_crypto::hash::CryptoHash;
-use aptos_crypto::multi_ed25519::{MultiEd25519PublicKey, MultiEd25519Signature};
+// use aptos_crypto::multi_ed25519::{MultiEd25519PublicKey, MultiEd25519Signature};
+use crate::aptos::hash::HashValue;
+use crate::aptos::traits::{CryptoMaterialError, Signature};
+use crate::ed25519::{Ed25519PublicKey, Ed25519Signature};
 use aptos_crypto_derive::{CryptoHasher, DeserializeKey, SerializeKey};
 use move_core_types::account_address::AccountAddress;
 use serde::{Deserialize, Serialize};
-use aptos_crypto::ValidCryptoMaterialStringExt;
 
 #[derive(Debug)]
 #[repr(u8)]
@@ -106,19 +105,12 @@ impl AccountAuthenticator {
     // }
 
     /// Return Ok if the authenticator's public key matches its signature, Err otherwise
-    pub fn verify<T: Serialize + CryptoHash>(&self, message: &T) -> anyhow::Result<()> {
+    pub fn verify(&self, bcs_msg: Vec<u8>) -> anyhow::Result<()> {
         match self {
             Self::Ed25519 {
                 public_key,
                 signature,
-            } => signature.verify(message, public_key),
-            // Self::MultiEd25519 {
-            //     public_key,
-            //     signature,
-            // } => signature.verify(message, public_key),
-            // Self::SingleKey { authenticator } => authenticator.verify(message),
-            // Self::MultiKey { authenticator } => authenticator.verify(message),
-            // Self::NoAccountAuthenticator => bail!("No signature to verify."),
+            } => signature.verify(bcs_msg, public_key),
         }
     }
 
@@ -181,10 +173,9 @@ impl AccountAuthenticator {
     Ord,
     PartialEq,
     PartialOrd,
-// SerializeKey,
+    // SerializeKey,
 )]
 // #[cfg_attr(any(test, feature = "fuzzing"), derive(Arbitrary))]
-#[cfg_attr(any(test, feature = "fuzzing"),)]
 pub struct AuthenticationKey([u8; AuthenticationKey::LENGTH]);
 
 impl AuthenticationKey {
@@ -282,7 +273,7 @@ impl fmt::Display for AccountAuthenticator {
 impl TryFrom<&[u8]> for AuthenticationKey {
     type Error = CryptoMaterialError;
 
-    fn try_from(bytes: &[u8]) -> std::result::Result<AuthenticationKey, CryptoMaterialError> {
+    fn try_from(bytes: &[u8]) -> Result<AuthenticationKey, CryptoMaterialError> {
         if bytes.len() != Self::LENGTH {
             return Err(CryptoMaterialError::WrongLengthError);
         }
@@ -295,7 +286,7 @@ impl TryFrom<&[u8]> for AuthenticationKey {
 impl TryFrom<Vec<u8>> for AuthenticationKey {
     type Error = CryptoMaterialError;
 
-    fn try_from(bytes: Vec<u8>) -> std::result::Result<AuthenticationKey, CryptoMaterialError> {
+    fn try_from(bytes: Vec<u8>) -> Result<AuthenticationKey, CryptoMaterialError> {
         AuthenticationKey::try_from(&bytes[..])
     }
 }
@@ -333,27 +324,26 @@ impl fmt::Display for AuthenticationKey {
     }
 }
 
-
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
-pub struct MultiKey {
-    public_keys: Vec<AnyPublicKey>,
-    signatures_required: u8,
-}
-
-impl From<MultiEd25519PublicKey> for MultiKey {
-    fn from(multi_ed25519_public_key: MultiEd25519PublicKey) -> Self {
-        let public_keys: Vec<AnyPublicKey> = multi_ed25519_public_key
-            .public_keys()
-            .iter()
-            .map(|key| AnyPublicKey::ed25519(key.clone()))
-            .collect();
-        let signatures_required = *multi_ed25519_public_key.threshold();
-        MultiKey {
-            public_keys,
-            signatures_required,
-        }
-    }
-}
+// #[derive(Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
+// pub struct MultiKey {
+//     public_keys: Vec<AnyPublicKey>,
+//     signatures_required: u8,
+// }
+//
+// impl From<MultiEd25519PublicKey> for MultiKey {
+//     fn from(multi_ed25519_public_key: MultiEd25519PublicKey) -> Self {
+//         let public_keys: Vec<AnyPublicKey> = multi_ed25519_public_key
+//             .public_keys()
+//             .iter()
+//             .map(|key| AnyPublicKey::ed25519(key.clone()))
+//             .collect();
+//         let signatures_required = *multi_ed25519_public_key.threshold();
+//         MultiKey {
+//             public_keys,
+//             signatures_required,
+//         }
+//     }
+// }
 
 // impl MultiKey {
 //     pub fn new(public_keys: Vec<AnyPublicKey>, signatures_required: u8) -> Result<Self> {
@@ -396,57 +386,56 @@ impl From<MultiEd25519PublicKey> for MultiKey {
 //     }
 // }
 
-
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
-pub enum AnyPublicKey {
-    Ed25519 {
-        public_key: Ed25519PublicKey,
-    },
-    Secp256k1Ecdsa {
-        public_key: secp256k1_ecdsa::PublicKey,
-    },
-    Secp256r1Ecdsa {
-        public_key: secp256r1_ecdsa::PublicKey,
-    },
-    // Keyless {
-    //     public_key: KeylessPublicKey,
-    // },
-    // FederatedKeyless {
-    //     public_key: FederatedKeylessPublicKey,
-    // },
-}
-
-impl AnyPublicKey {
-    pub fn ed25519(public_key: Ed25519PublicKey) -> Self {
-        Self::Ed25519 { public_key }
-    }
-
-    pub fn secp256k1_ecdsa(public_key: secp256k1_ecdsa::PublicKey) -> Self {
-        Self::Secp256k1Ecdsa { public_key }
-    }
-
-    pub fn secp256r1_ecdsa(public_key: secp256r1_ecdsa::PublicKey) -> Self {
-        Self::Secp256r1Ecdsa { public_key }
-    }
-
-    // pub fn keyless(public_key: KeylessPublicKey) -> Self {
-    //     Self::Keyless { public_key }
-    // }
-    //
-    // pub fn federated_keyless(public_key: FederatedKeylessPublicKey) -> Self {
-    //     Self::FederatedKeyless { public_key }
-    // }
-
-    pub fn to_bytes(&self) -> Vec<u8> {
-        bcs::to_bytes(self).expect("Only unhandleable errors happen here.")
-    }
-}
-
-impl TryFrom<&[u8]> for AnyPublicKey {
-    type Error = CryptoMaterialError;
-
-    fn try_from(bytes: &[u8]) -> Result<Self, CryptoMaterialError> {
-        bcs::from_bytes::<AnyPublicKey>(bytes)
-            .map_err(|_e| CryptoMaterialError::DeserializationError)
-    }
-}
+// #[derive(Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
+// pub enum AnyPublicKey {
+//     Ed25519 {
+//         public_key: Ed25519PublicKey,
+//     },
+//     Secp256k1Ecdsa {
+//         public_key: secp256k1_ecdsa::PublicKey,
+//     },
+//     Secp256r1Ecdsa {
+//         public_key: secp256r1_ecdsa::PublicKey,
+//     },
+//     // Keyless {
+//     //     public_key: KeylessPublicKey,
+//     // },
+//     // FederatedKeyless {
+//     //     public_key: FederatedKeylessPublicKey,
+//     // },
+// }
+//
+// impl AnyPublicKey {
+//     pub fn ed25519(public_key: Ed25519PublicKey) -> Self {
+//         Self::Ed25519 { public_key }
+//     }
+//
+//     pub fn secp256k1_ecdsa(public_key: secp256k1_ecdsa::PublicKey) -> Self {
+//         Self::Secp256k1Ecdsa { public_key }
+//     }
+//
+//     pub fn secp256r1_ecdsa(public_key: secp256r1_ecdsa::PublicKey) -> Self {
+//         Self::Secp256r1Ecdsa { public_key }
+//     }
+//
+//     // pub fn keyless(public_key: KeylessPublicKey) -> Self {
+//     //     Self::Keyless { public_key }
+//     // }
+//     //
+//     // pub fn federated_keyless(public_key: FederatedKeylessPublicKey) -> Self {
+//     //     Self::FederatedKeyless { public_key }
+//     // }
+//
+//     pub fn to_bytes(&self) -> Vec<u8> {
+//         bcs::to_bytes(self).expect("Only unhandleable errors happen here.")
+//     }
+// }
+//
+// impl TryFrom<&[u8]> for AnyPublicKey {
+//     type Error = CryptoMaterialError;
+//
+//     fn try_from(bytes: &[u8]) -> Result<Self, CryptoMaterialError> {
+//         bcs::from_bytes::<AnyPublicKey>(bytes)
+//             .map_err(|_e| CryptoMaterialError::DeserializationError)
+//     }
+// }

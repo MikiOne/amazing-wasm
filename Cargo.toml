@@ -14,24 +14,27 @@ js-sys = "0.3"
 console_error_panic_hook = "0.1.6"
 
 obfstr = "0.4.4"
-serde = { version = "1.0.213", features = ["derive"] }
+serde = { version = "1.0.213", features = ["derive", "rc"] }
 serde_json = "1.0.132"
 
 #aptos
-#sha3 = "0.10.8"
-#ed25519-dalek = "1.0.1"
-bcs = "0.1.6"
 move-core-types = { git = "https://github.com/move-language/move", rev = "ea70797099baea64f05194a918cebd69ed02b285", features = ["address32"] }
-aptos-crypto = { git = "https://github.com/aptos-labs/aptos-core", branch = "mainnet" }
+#aptos-crypto = { git = "https://github.com/aptos-labs/aptos-core", branch = "mainnet" }
 aptos-crypto-derive = { git = "https://github.com/aptos-labs/aptos-core", branch = "mainnet" }
+ed25519-dalek = { version = "=1.0.1", features = ["std", "serde"] }
+bcs = { git = "https://github.com/aptos-labs/bcs.git", rev = "d31fab9d81748e2594be5cd5cdf845786a30562d" }
+bytes = "1.8.0"
+serde_bytes = "0.11.6"
 hex = "0.4.3"
-#rand = "0.8.5"
 anyhow = "1.0.63"
 getrandom = { version = "0.2", features = ["js"] }
-
-[patch.crates-io]
-merlin = { git = "https://github.com/aptos-labs/merlin" }
-x25519-dalek = { git = "https://github.com/aptos-labs/x25519-dalek", branch = "zeroize_v1" }
+curve25519-dalek = "=3.2.0"
+rand = "=0.7.3"
+thiserror = "1.0.37"
+sha3 = "0.10.8"
+tiny-keccak = { version = "2.0.2", features = ["keccak", "sha3"] }
+once_cell = "1.20.2"
+more-asserts = "0.3.1"
 
 
 [dependencies.web-sys]
@@ -40,10 +43,13 @@ features = ["console", "Window", "Document", "Location", ]
 
 
 [dev-dependencies]
-#tw_aptos = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
-#tw_proto = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
-#tw_encoding = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
-#tw_coin_entry = { git = "https://github.com/trustwallet/wallet-core.git", tag = "4.1.14" }
+aptos-sdk = { git = "https://github.com/aptos-labs/aptos-core", branch = "devnet" } #branch=devnet#d8ac339d
+tokio = { version = "1", features = ["full"] }
+serde_yml = "0.0.10"
+
+[patch.crates-io]
+merlin = { git = "https://github.com/aptos-labs/merlin" }
+x25519-dalek = { git = "https://github.com/aptos-labs/x25519-dalek", branch = "zeroize_v1" }
 
 
 # build release opt
