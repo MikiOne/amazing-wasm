@@ -52,7 +52,7 @@ impl WasmBinData {
 //         AptosSigner { private_key, public_key }
 //     }
 //
-//     pub fn sign_transaction.rs(&self, transaction_data: &[u8]) -> String {
+//     pub fn aptos_sdk_sign_submit_transaction(&self, transaction_data: &[u8]) -> String {
 //         let signature: Signature = self.private_key.sign(transaction_data);
 //         signature.to_hex()
 //     }

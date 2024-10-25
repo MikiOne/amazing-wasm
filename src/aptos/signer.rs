@@ -2,7 +2,7 @@ use move_core_types::account_address::AccountAddress;
 
 use crate::aptos::authenticator::AuthenticationKey;
 use crate::aptos::traits::ValidCryptoMaterialStringExt;
-use crate::ed25519::{Ed25519PrivateKey, Ed25519PublicKey};
+use crate::ed25519::{Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature};
 use crate::traits::SigningKey;
 
 pub struct Signer {
@@ -26,8 +26,8 @@ impl Signer {
         }
     }
 
-    pub fn sing_msg(&self, bcs_msg: Vec<u8>) {
+    pub fn sing_msg(&self, bcs_msg: Vec<u8>) -> Ed25519Signature {
         let ss = self.ed_pri_key.sign_arbitrary_message(bcs_msg.as_ref());
-        println!("{:?}", ss);
+        ss
     }
 }

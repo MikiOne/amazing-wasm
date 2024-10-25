@@ -4,7 +4,7 @@ use web_sys::*;
 mod wasm_data;
 #[macro_use]
 mod util;
-mod aptos;
+pub mod aptos;
 pub mod ed25519;
 
 use aptos::*;
