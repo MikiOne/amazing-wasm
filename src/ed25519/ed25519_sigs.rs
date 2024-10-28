@@ -3,7 +3,6 @@
 
 //! This file implements traits for Ed25519 signatures.
 
-use crate::aptos::hash::CryptoHash;
 use crate::aptos::traits::ValidCryptoMaterialStringExt;
 use crate::{
     ed25519::{Ed25519PrivateKey, Ed25519PublicKey, ED25519_SIGNATURE_LENGTH, L},
