@@ -6,7 +6,6 @@ use anyhow::bail;
 use std::convert::TryFrom;
 use std::fmt;
 use std::str::FromStr;
-// use aptos_crypto::multi_ed25519::{MultiEd25519PublicKey, MultiEd25519Signature};
 use crate::aptos::hash::HashValue;
 use crate::aptos::traits::{CryptoMaterialError, Signature};
 use crate::ed25519::{Ed25519PublicKey, Ed25519Signature};
